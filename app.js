@@ -52,11 +52,34 @@ const users = [
                     password: user.password,
                 });
 
-                response.end('usersCreated');
+                response.end("usersCreated");
             });
         }
+    } 
+    else if (method === 'POST'){
+      if (url === "/posts"){
+        let body ="";
+
+        request.on("data", (data)=>{
+          body += data;
+        });
+
+        request.on ("end", () => {
+          const post = JSON.parse(body);
+
+          posts.push({
+            id: post.id,
+            title: post.title,
+            content: post.content,
+            userId: post.userId
+          });
+
+          response.end("postCreated");
+        })
+      }
     }
   }
+
 
   server.on ("request", httpRequestListener)
 
