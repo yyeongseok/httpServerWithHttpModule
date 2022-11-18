@@ -29,6 +29,22 @@ const users = [
       userId: 1,
     },
   ];
+  const data = [
+    {
+      userID: 1,
+      UserName: "Rebakah Johnson",
+      postingId: 1,
+      postingTitle: "간단한 HTTP API 개발 시작!",
+      postungContent: "Node.js에 내장되어 있는 http 모듈을 사용해서 HTTP server를 구현."
+    },
+    {
+      userID: 2,
+      UserName: "Fabian Predovic",
+      postingId: 2,
+      postingTitle: "HTTP의 속성",
+      postungContent: "Request/Response와 Stateless!!"
+    }
+  ]
 
   const httpRequestListener = function (request, response){
     const { url, method } = request
@@ -51,8 +67,8 @@ const users = [
                     email: user.email,
                     password: user.password,
                 });
-
-                response.end("usersCreated");
+                response.writeHead(200, { "Content-Type": "application/json" });
+                response.end(JSON.stringify({message:"Userscreated" }));
             });
         }
     } 
@@ -71,21 +87,25 @@ const users = [
             id: post.id,
             title: post.title,
             content: post.content,
-            userId: post.userId
+            userId: post.userId,
           });
-
-          response.end("postCreated");
+          response.writeHead(200, { "Content-Type": "application/json" });
+          response.end(JSON.stringify({ message : "postCreated "}));
         })
       }
-    }
-  }
-
-
+    } else if(method === "GET"){
+       if (url === "/inquiry"){
+          response.writeHead(200, {"Content-Type": "application/json"});
+          response.end(JSON.stringify({"data" : data}))
+          }
+         }
+       }
   server.on ("request", httpRequestListener)
 
   const IP = '127.0.0.1'
-  const PORT = 8000
+  const PORT = 8001
 
   server.listen(PORT, IP, function(){
     console.log(`Listening to request on ip ${IP} & port ${PORT}`)
   })
+
