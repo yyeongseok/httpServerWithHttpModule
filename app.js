@@ -29,7 +29,7 @@ const users = [
       userId: 1,
     },
   ];
-  const data = [
+  const datas = [
     {
       userID: 1,
       UserName: "Rebakah Johnson",
@@ -96,10 +96,33 @@ const users = [
     } else if(method === "GET"){
        if (url === "/inquiry"){
           response.writeHead(200, {"Content-Type": "application/json"});
-          response.end(JSON.stringify({"data" : data}))
+          response.end(JSON.stringify({"data" : datas}))
+          }
+         }else if(method === "PATCH"){ //메소드 patch 
+          if(url.startsWith("/datas/")){ // startsWith ()안에 참/거짓을 확인후 배열로 나온다?
+          let body ="";
+
+          request.on ("data", (data)=>{
+            body += data;
+          });
+          request.on("end",()=>{
+            const inputpost = JSON.parse(body);
+            const postID= Number(url.split("/")[2]); // 위에서 불러온 url을 split / 으로 나누고 배열 2번째 객체를 숫자로 선언한다.
+            const post = posts.find((post)=> {return post.id === postID});
+
+            post.content = inputpost.content;
+
+            response.writeHead(200, {"content-Type":"application/json"});
+            response.end(JSON.stringify({
+              id: post.id,
+              title: post.title,
+              content : post.content,
+            }))
+          })
           }
          }
-       }
+
+  }
   server.on ("request", httpRequestListener)
 
   const IP = '127.0.0.1'
